@@ -5,9 +5,9 @@ import java.util.Objects;
  abstract class PreTask {
     String name;
     String description;
-    String status;
+    Status status;
 
-    public PreTask(String description, String status, String name) {
+    public PreTask(String description, Status status, String name) {
         this.description = description;
         this.status = status;
         this.name = name;
@@ -29,26 +29,34 @@ import java.util.Objects;
         this.name = name;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PreTask preTask = (PreTask) o;
-        return Objects.equals(getName(), preTask.getName()) &&
-                Objects.equals(getDescription(), preTask.getDescription()) &&
-                Objects.equals(getStatus(), preTask.getStatus());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName(), getDescription(), getStatus());
-    }
-}
+     @Override
+     public boolean equals(Object o) {
+         if (this == o) return true;
+         if (o == null || getClass() != o.getClass()) return false;
+         PreTask preTask = (PreTask) o;
+         return Objects.equals(getDescription(), preTask.getDescription());
+     }
+
+     @Override
+     public int hashCode() {
+         return Objects.hashCode(getDescription());
+     }
+
+     @Override
+     public String toString() {
+         return "PreTask{" +
+                 "description='" + description + '\'' +
+                 ", name='" + name + '\'' +
+                 ", status=" + status +
+                 '}';
+     }
+ }
