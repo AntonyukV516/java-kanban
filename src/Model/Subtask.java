@@ -1,8 +1,8 @@
 package Model;
 
-class Subtask extends PreTask {
-    public Subtask(String description, Status status, String name) {
-        super(description, status, name);
+public class Subtask extends PreTask {
+    public Subtask(String description, String name) {
+        super(description, name);
 
     }
 }

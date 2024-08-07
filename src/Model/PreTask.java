@@ -6,11 +6,12 @@ import java.util.Objects;
     String name;
     String description;
     Status status;
+    int id;
 
-    public PreTask(String description, Status status, String name) {
+    public PreTask(String description, String name) {
         this.description = description;
-        this.status = status;
         this.name = name;
+        this.status = Status.NEW;
     }
 
     public String getDescription() {
@@ -37,26 +38,33 @@ import java.util.Objects;
         this.status = status;
     }
 
+     public int getId() {
+         return id;
+     }
+
+     public void setId(int id) {
+         this.id = id;
+     }
 
      @Override
      public boolean equals(Object o) {
          if (this == o) return true;
          if (o == null || getClass() != o.getClass()) return false;
          PreTask preTask = (PreTask) o;
-         return Objects.equals(getDescription(), preTask.getDescription());
+         return getId() == preTask.getId();
      }
 
      @Override
      public int hashCode() {
-         return Objects.hashCode(getDescription());
+         return Objects.hashCode(getId());
      }
 
      @Override
      public String toString() {
-         return "PreTask{" +
-                 "description='" + description + '\'' +
-                 ", name='" + name + '\'' +
-                 ", status=" + status +
-                 '}';
+         return
+                 "Название " + name + '\'' +
+                 ", Описание '" + description + '\'' +
+                 ", Статус" + status +
+                 ", id=" + id;
      }
  }
