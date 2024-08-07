@@ -2,8 +2,11 @@ package Model;
 
 import java.util.HashMap;
 
-public class Epic extends  PreTask {
+public class Epic extends PreTask {
     HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    // Реализовано так, так как по смыслу задачи эпик должен иметь подзадачи и знать о них,
+    // т.е. они есть часть обьектов  этого класса
+    //Иначе нет смысла его использовать - для этого в менеджере хранится таблица обычных задач
 
     public Epic(String description, String name) {
         super(description, name);

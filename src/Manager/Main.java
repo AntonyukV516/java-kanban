@@ -1,13 +1,23 @@
 package Manager;
 
-import Model.Status;
-import Model.Task;
+import Model.Epic;
+import Model.Subtask;
 
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Поехали!");
+        Epic epic1 = new Epic("навести уборку", "Порядок");
+        Epic epic2 = new Epic("отдохнуть хорошо", "Отдых");
+        Subtask subtask1 = new Subtask("помыть посуду", "посуда");
+        Subtask subtask2 = new Subtask("вынести мусор", "мусор");
+        TaskMeneger manager = new TaskMeneger();
+        manager.AddEpic(epic1);
+        manager.AddEpic(epic2);
+        System.out.println(manager.epics);
+        manager.AddSubtaskToEpic(epic1, subtask1);
+        manager.AddSubtaskToEpic(epic1, subtask2);
+        System.out.println(manager.epics);
+        //System.out.println(manager.getSubTackToID(4));
 
-        System.out.println(new Task("тестовое описание", Status.IN_PROGRESS, "тестовое название" ));
     }
 }
