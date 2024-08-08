@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class TaskMeneger {
-    Integer counterID = 0;
-    HashMap<Integer, Epic> epics = new HashMap<>();
-    HashMap<Integer, Task> tasks = new HashMap<>();
+   private Integer counterID = 0;
+   private HashMap<Integer, Epic> epics = new HashMap<>();
+   private HashMap<Integer, Task> tasks = new HashMap<>();
 
     Epic AddEpic(Epic epic) {
         this.counterID++;

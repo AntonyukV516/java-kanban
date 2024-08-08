@@ -17,10 +17,10 @@ public class Main {
         TaskMeneger manager = new TaskMeneger();
         manager.AddEpic(epic1);
         manager.AddEpic(epic2);
-        System.out.println(manager.epics);
+        System.out.println(manager.getEpics());
         manager.AddSubtaskToEpic(epic1, subtask1);
         manager.AddSubtaskToEpic(epic1, subtask2);
-        System.out.println(manager.epics);
+        System.out.println(manager.getEpics());
         System.out.println(manager.getSubTackToID(4));
         manager.updateSubTask(subtask1, Status.NEW);
         manager.updateSubTask(subtask2, Status.NEW);
