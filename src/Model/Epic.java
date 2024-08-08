@@ -26,6 +26,6 @@ public class Epic extends PreTask {
                 ", Описание '" + description + '\'' +
                 ", подзадача " + subtasks +
                 ", статус" + status +
-                "id=" + id;
+                ", id=" + id;
     }
 }

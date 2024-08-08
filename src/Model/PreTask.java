@@ -64,7 +64,7 @@ import java.util.Objects;
          return
                  "Название " + name + '\'' +
                  ", Описание '" + description + '\'' +
-                 ", Статус" + status +
-                 ", id=" + id;
+                 ", Статус " + status +
+                 " , id=" + id;
      }
  }

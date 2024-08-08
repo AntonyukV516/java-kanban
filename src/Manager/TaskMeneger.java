@@ -1,6 +1,7 @@
 package Manager;
 
 import Model.Epic;
+import Model.Status;
 import Model.Subtask;
 import Model.Task;
 
@@ -74,11 +75,12 @@ public class TaskMeneger {
         return null;
     }
 
-    Task updateTask(Task updatedTask) {
+    Task updateTask(Task updatedTask, Status newStatus) {
         Integer id = updatedTask.getId();
         for (Integer taskID : tasks.keySet()) {
             if (id.equals(taskID)) {
                 tasks.put(id, updatedTask);
+                tasks.get(id).setStatus(newStatus);
                 return updatedTask;
             }
         }
@@ -96,15 +98,27 @@ public class TaskMeneger {
         return null;
     }
 
-    Subtask updateSubTask(Subtask updatedSubtask) {
+    Subtask updateSubTask(Subtask updatedSubtask, Status newStatus) {
         Integer id = updatedSubtask.getId();
+        boolean isStatusSumDone = true;
+        boolean isStatusSumNew = true;
         for (Epic epic : epics.values()) {
             for (Integer ID : epic.getSubtasks().keySet()) {
                 if (Objects.equals(ID, id)) {
                     epic.getSubtasks().put(id, updatedSubtask);
-                    return updatedSubtask;
+                    epic.getSubtasks().get(id).setStatus(newStatus);
+                }
+                isStatusSumDone &= epic.getSubtasks().get(ID).getStatus() == Status.DONE;
+                isStatusSumNew &= epic.getSubtasks().get(ID).getStatus() == Status.NEW;
+                if (isStatusSumDone) {
+                    epic.setStatus(Status.DONE);
+                } else if (isStatusSumNew) {
+                    epic.setStatus(Status.NEW);
+                } else {
+                    epic.setStatus(Status.IN_PROGRESS);
                 }
             }
+            return epic.getSubtasks().get(id);
         }
         return null;
     }
@@ -134,5 +148,6 @@ public class TaskMeneger {
     HashMap<Integer, Subtask> getSubTaskFromEpic(Epic epic) {
         return epic.getSubtasks();
     }
+
 
 }

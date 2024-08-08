@@ -1,6 +1,7 @@
 package Manager;
 
 import Model.Epic;
+import Model.Status;
 import Model.Subtask;
 
 public class Main {
@@ -18,6 +19,10 @@ public class Main {
         manager.AddSubtaskToEpic(epic1, subtask2);
         System.out.println(manager.epics);
         //System.out.println(manager.getSubTackToID(4));
+        manager.updateSubTask(subtask1, Status.NEW);
+        manager.updateSubTask(subtask2, Status.NEW);
+        System.out.println(manager.getEpicToID(1));
+
 
     }
 }
