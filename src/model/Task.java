@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 public class Task extends PreTask {
     public Task(String description, String name) {

@@ -1,8 +1,7 @@
-package Manager;
-
-import Model.Epic;
-import Model.Status;
-import Model.Subtask;
+import manager.TaskMeneger;
+import model.Epic;
+import model.Status;
+import model.Subtask;
 
 public class Main {
 
@@ -18,13 +17,21 @@ public class Main {
         manager.AddEpic(epic1);
         manager.AddEpic(epic2);
         System.out.println(manager.getEpics());
-        manager.AddSubtaskToEpic(epic1, subtask1);
-        manager.AddSubtaskToEpic(epic1, subtask2);
+        manager.AddSubtask( subtask1);
+        manager.AddSubtask( subtask2);
+        manager.AddSubtaskToEpic(1,3);
+        manager.AddSubtaskToEpic(1,4 );
         System.out.println(manager.getEpics());
-        System.out.println(manager.getSubTackToID(4));
-        manager.updateSubTask(subtask1, Status.NEW);
-        manager.updateSubTask(subtask2, Status.NEW);
-        System.out.println(manager.getEpicToID(1));
+        System.out.println(manager.getSubTackByID(4));
+        manager.updateSubtask(subtask1);
+        manager.updateSubtask(subtask2);
+        System.out.println(manager.getEpicByID(2));
+        System.out.println(manager.getSubTaskFromEpic(1));
+        subtask2.setStatus(Status.DONE);
+        subtask1.setStatus(Status.NEW);
+        manager.updateSubtask(subtask2);
+        System.out.println(manager.getSubTaskFromEpic(1));
+        System.out.println(manager.getEpicByID(1));
 
 
     }
