@@ -160,8 +160,8 @@ public class TaskMeneger {
     public void deleteSubTaskByID(Integer ID) {
         if (subtasks.containsKey(ID)) {
             Integer epicID = subtasks.get(ID).getEpicID();
-            subtasks.remove(ID);
             changeEpicStatus(epicID);
+            subtasks.remove(ID);
         }
     }
 
