@@ -13,6 +13,10 @@ public class Epic extends PreTask {
         return SubtasksID;
     }
 
+    public void clearSubtasksID(){
+        SubtasksID.clear();
+    }
+
     public void addSubtaskID(Integer subtasksID) {
         SubtasksID.add(subtasksID);
     }

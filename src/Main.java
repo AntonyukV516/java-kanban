@@ -14,13 +14,11 @@ public class Main {
         Subtask subtask1 = new Subtask("помыть посуду", "посуда");
         Subtask subtask2 = new Subtask("вынести мусор", "мусор");
         TaskMeneger manager = new TaskMeneger();
-        manager.AddEpic(epic1);
-        manager.AddEpic(epic2);
+        manager.addEpic(epic1);
+        manager.addEpic(epic2);
         System.out.println(manager.getEpics());
-        manager.AddSubtask( subtask1);
-        manager.AddSubtask( subtask2);
-        manager.AddSubtaskToEpic(1,3);
-        manager.AddSubtaskToEpic(1,4 );
+        manager.addSubtask( subtask1);
+        manager.addSubtask( subtask2);
         System.out.println(manager.getEpics());
         System.out.println(manager.getSubTackByID(4));
         manager.updateSubtask(subtask1);
