@@ -22,7 +22,7 @@ public class Main {
         manager.addSubtask( subtask1);
         manager.addSubtask( subtask2);
         System.out.println(manager.getEpics());
-        System.out.println(manager.getSubTackByID(4));
+        System.out.println(manager.getSubtaskByID(4));
         manager.updateSubtask(subtask1);
         manager.updateSubtask(subtask2);
         System.out.println(manager.getEpicByID(2));
