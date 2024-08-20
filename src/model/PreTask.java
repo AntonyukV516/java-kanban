@@ -2,7 +2,7 @@ package model;
 
 import java.util.Objects;
 
-abstract class PreTask {
+public abstract class PreTask {
     protected String name;
     protected String description;
     protected Status status;

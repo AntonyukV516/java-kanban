@@ -1,4 +1,4 @@
-import manager.TaskMeneger;
+import manager.InMemoryTaskManager;
 import model.Epic;
 import model.Status;
 import model.Subtask;
@@ -13,7 +13,7 @@ public class Main {
         Epic epic2 = new Epic("отдохнуть хорошо", "Отдых");
         Subtask subtask1 = new Subtask("помыть посуду", "посуда");
         Subtask subtask2 = new Subtask("вынести мусор", "мусор");
-        TaskMeneger manager = new TaskMeneger();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
         manager.addEpic(epic1);
         manager.addEpic(epic2);
         System.out.println(manager.getEpics());
