@@ -200,4 +200,8 @@ public class InMemoryTaskManager implements TaskMeneger {
         }
     }
 
+    @Override
+    public HistoryManager getHistoryManager() {
+        return historyManager;
+    }
 }

@@ -120,4 +120,5 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(expectedList.getFirst(), actualList.getFirst());
         Assertions.assertEquals(expectedList.getLast(), actualList.getLast());
     }
+
 }
