@@ -3,15 +3,16 @@ package manager;
 import model.PreTask;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private  ArrayList<PreTask> history = new ArrayList<>();
+    private List<PreTask> history = new ArrayList<>();
     private int historyMaxSize = 10;
 
 
     @Override
-    public ArrayList<PreTask> getHistory() {
-        return history;
+    public List<PreTask> getHistory() {
+        return new ArrayList<>(history);
     }
 
     @Override

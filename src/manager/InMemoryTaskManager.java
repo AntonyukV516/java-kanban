@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskMeneger {
-    private Integer counterID = 1;
+    private Integer counterID = 0;
     private HashMap<Integer, Epic> epics = new HashMap<>();
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
@@ -199,6 +199,5 @@ public class InMemoryTaskManager implements TaskMeneger {
             return subtasksFromEpic;
         }
     }
-
 
 }
