@@ -1,12 +1,13 @@
 package manager;
 
 import model.PreTask;
+import model.Task;
 
 import java.util.List;
 
 public interface HistoryManager {
 
-    void add(PreTask preTask);
+    PreTask add(PreTask preTask);
 
     List<PreTask> getHistory();
 }

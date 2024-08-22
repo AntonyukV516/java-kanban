@@ -1,12 +1,10 @@
 package manager;
 
-import model.Epic;
-import model.Status;
-import model.Subtask;
-import model.Task;
+import model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskMeneger {
     private Integer counterID = 0;
@@ -201,7 +199,7 @@ public class InMemoryTaskManager implements TaskMeneger {
     }
 
     @Override
-    public HistoryManager getHistoryManager() {
-        return historyManager;
+    public List<PreTask> getHistory() {
+        return historyManager.getHistory();
     }
 }

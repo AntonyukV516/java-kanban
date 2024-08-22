@@ -6,6 +6,7 @@ import model.Subtask;
 import model.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskMeneger {
     Epic addEpic(Epic epic);
@@ -46,5 +47,5 @@ public interface TaskMeneger {
 
     ArrayList<Subtask> getSubTaskFromEpic(Integer epicID);
 
-    HistoryManager getHistoryManager();
+    List<PreTask> getHistory();
 }

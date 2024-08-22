@@ -1,13 +1,14 @@
 package manager;
 
 import model.PreTask;
+import model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private List<PreTask> history = new ArrayList<>();
-    private int historyMaxSize = 10;
+    private final static int HISTORY_MAX_SIZE = 10;
 
 
     @Override
@@ -16,12 +17,14 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public void add(PreTask preTask){
-        if (history.size() < historyMaxSize) {
+    public PreTask add(PreTask preTask){
+        if (history.size() < HISTORY_MAX_SIZE) {
             history.addLast(preTask);
+            return preTask;
         } else {
             history.removeFirst();
             history.addLast(preTask);
+            return preTask;
         }
     }
 

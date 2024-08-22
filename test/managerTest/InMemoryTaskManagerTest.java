@@ -1,3 +1,5 @@
+package managerTest;
+
 import manager.Managers;
 import manager.TaskMeneger;
 import model.Epic;
@@ -55,6 +57,16 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
+    void addTask(){
+        Task task = new Task("111", "name1");
+        Task expectedTask = new Task("111", "name1");
+
+        Task savedTask = taskMeneger.addTask(task);
+
+        Assertions.assertEquals(expectedTask, savedTask);
+    }
+
+    @Test
     void clearEpics() {
         Epic epic1 = new Epic("навести уборку", "Порядок");
 
@@ -62,6 +74,52 @@ class InMemoryTaskManagerTest {
         taskMeneger.clearEpics();
 
         Assertions.assertTrue(taskMeneger.getEpics().isEmpty());
+    }
+
+    @Test
+    void clearTasks(){
+        Task task = new Task("111", "name");
+
+        taskMeneger.addTask(task);
+        taskMeneger.clearTask();
+
+        Assertions.assertTrue(taskMeneger.getTasks().isEmpty());
+    }
+
+    @Test
+    void clearSubtasks(){
+        Subtask subtask = new Subtask("222", "name");
+
+        taskMeneger.addSubtask(subtask);
+        taskMeneger.clearSubtask();
+
+        Assertions.assertTrue(taskMeneger.getSubtasks().isEmpty());
+    }
+
+    @Test
+    void getEpicByID(){
+        Epic epic = new Epic("123", " name123");
+        Epic expectedEpic = new Epic("123", " name123");
+
+        taskMeneger.addEpic(epic);
+        Epic actualEpic = taskMeneger.getEpicByID(epic.getId());
+
+        Assertions.assertEquals(expectedEpic, actualEpic);
+    }
+
+    @Test
+    void  getSubtaskByID(){
+        Epic epic = new Epic("444", " name444");
+        taskMeneger.addEpic(epic);
+        Subtask subtask = new Subtask("999", "name999");
+        Subtask expectedSubtask = new Subtask("999", "name999");
+        subtask.setEpicID(epic.getId());
+        expectedSubtask.setId(1);
+
+        taskMeneger.addSubtask(subtask);
+        Subtask actualSubtask = taskMeneger.getSubtaskByID(subtask.getId());
+
+        Assertions.assertEquals(expectedSubtask, actualSubtask);
     }
 
     @Test
@@ -119,6 +177,33 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertEquals(expectedList.getFirst(), actualList.getFirst());
         Assertions.assertEquals(expectedList.getLast(), actualList.getLast());
+    }
+
+    @Test
+    void savedOldVersionTaskInHistory(){
+        Task task = new Task("description", "Name");
+        Task updatedTask = new Task("descriptionNew", "NameNew");
+        Task expectedTask = new Task("description", "Name");
+
+        taskMeneger.addTask(task);
+        taskMeneger.getTaskByID(task.getId());
+        updatedTask.setId(task.getId());
+        taskMeneger.updateTask(updatedTask);
+        taskMeneger.getTaskByID(updatedTask.getId());
+
+        Assertions.assertTrue(taskMeneger.getHistory().contains(expectedTask));
+    }
+
+    @Test
+    void consistencyTask(){
+        Task task = new Task("описание", "Имя");
+
+        Task actualTask = taskMeneger.addTask(task);
+
+        Assertions.assertEquals(task.getId(), actualTask.getId());
+        Assertions.assertEquals(task.getName(), actualTask.getName());
+        Assertions.assertEquals(task.getDescription(), actualTask.getDescription());
+        Assertions.assertEquals(task.getStatus(), actualTask.getStatus());
     }
 
 }
