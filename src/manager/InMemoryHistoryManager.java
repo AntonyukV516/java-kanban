@@ -29,7 +29,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public List<PreTask> getHistory() {
         history.clear();
-        for ( Node node : nodeMap.values()){
+        for (Node node : nodeMap.values()) {
             history.addLast(node.values);
         }
         return history;

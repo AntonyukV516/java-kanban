@@ -1,17 +1,17 @@
 package model;
 
 public class Subtask extends PreTask {
-    private Integer epicID;
+    private Integer epicId;
 
     public Subtask(String description, String name) {
         super(description, name);
     }
 
-    public Integer getEpicID() {
-        return epicID;
+    public Integer getEpicId() {
+        return epicId;
     }
 
-    public void setEpicID(Integer epicID) {
-        this.epicID = epicID;
+    public void setEpicID(Integer epicId) {
+        this.epicId = epicId;
     }
 }
