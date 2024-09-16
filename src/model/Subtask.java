@@ -11,7 +11,7 @@ public class Subtask extends PreTask {
         return epicId;
     }
 
-    public void setEpicID(Integer epicId) {
+    public void setEpicId(Integer epicId) {
         this.epicId = epicId;
     }
 }
