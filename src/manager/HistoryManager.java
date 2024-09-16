@@ -1,7 +1,6 @@
 package manager;
 
 import model.PreTask;
-import model.Task;
 
 import java.util.List;
 
