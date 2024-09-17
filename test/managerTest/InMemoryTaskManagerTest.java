@@ -69,7 +69,12 @@ class InMemoryTaskManagerTest {
     @Test
     void clearEpics() {
         Epic epic1 = new Epic("навести уборку", "Порядок");
+        Epic epic2 = new Epic("111", "111");
+        epic1.setId(1);
+        epic2.setId(2);
 
+        taskMeneger.getEpicById(epic1.getId());
+        taskMeneger.getEpicById(epic2.getId());
         taskMeneger.addEpic(epic1);
         taskMeneger.clearEpics();
 
@@ -79,7 +84,12 @@ class InMemoryTaskManagerTest {
     @Test
     void clearTasks() {
         Task task = new Task("111", "name");
+        Task task1 = new Task("222", "name");
+        task.setId(1);
+        task1.setId(2);
 
+        taskMeneger.getTaskById(task.getId());
+        taskMeneger.getTaskById(task1.getId());
         taskMeneger.addTask(task);
         taskMeneger.clearTask();
 

@@ -54,13 +54,21 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        Node delitedNode = nodeMap.remove(id);
-        removeNode(delitedNode);
+        if (nodeMap.get(id) != null) {
+            Node delitedNode = nodeMap.remove(id);
+            removeNode(delitedNode);
+        }
     }
 
     private void removeNode(Node node) {
         Node oldPrev = node.previous;
+        if (oldPrev == null) {
+            oldPrev = first;
+        }
         Node oldNext = node.next;
+        if (oldNext == null) {
+            oldNext = last;
+        }
         if (node.next == null) {
             oldPrev = last;
         } else {
