@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private List<PreTask> history = new ArrayList<>();
     private Map<Integer, Node> nodeMap = new LinkedHashMap<>();
     private Node first;
     private Node last;
@@ -28,7 +27,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<PreTask> getHistory() {
-        history.clear();
+        List<PreTask> history = new ArrayList<>();
         for (Node node : nodeMap.values()) {
             history.addLast(node.values);
         }
@@ -37,12 +36,13 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public PreTask add(PreTask preTask) {
-        final Node oldLast = last;
-        final Node newNode = new Node(preTask);
-        last = newNode;
+        Node oldLast = last;
+        Node newNode = new Node(preTask);
         if (oldLast == null) {
             first = newNode;
+            last = newNode;
         } else {
+            last.previous = oldLast;
             oldLast.next = newNode;
         }
         if (nodeMap.containsKey(preTask.getId())) {
@@ -54,6 +54,22 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        nodeMap.remove(id);
+        Node delitedNode = nodeMap.remove(id);
+        removeNode(delitedNode);
+    }
+
+    private void removeNode(Node node) {
+        Node oldPrev = node.previous;
+        Node oldNext = node.next;
+        if (node.next == null) {
+            oldPrev = last;
+        } else {
+            oldPrev.next = node.next;
+        }
+        if (node.previous == null) {
+            oldNext = first;
+        } else {
+            oldPrev.next = node.next;
+        }
     }
 }
