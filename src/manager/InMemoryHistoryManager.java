@@ -3,81 +3,81 @@ package manager;
 import model.PreTask;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private Map<Integer, Node> nodeMap = new LinkedHashMap<>();
+    private Map<Integer, Node> nodeMap = new HashMap<>();
     private Node first;
     private Node last;
 
     static class Node {
         private Node previous;
         private Node next;
-        private PreTask values;
+        private PreTask value;
 
-        public Node(PreTask values) {
+        public Node(PreTask value) {
             this.previous = null;
             this.next = null;
-            this.values = values;
+            this.value = value;
         }
     }
 
-
+    // переделать согласно коментариям
     @Override
     public List<PreTask> getHistory() {
         List<PreTask> history = new ArrayList<>();
-        for (Node node : nodeMap.values()) {
-            history.addLast(node.values);
+        Node node = first;
+        while (node != null) {
+            history.add(node.value);
+            node = node.next;
         }
         return history;
     }
 
     @Override
     public PreTask add(PreTask preTask) {
-        Node oldLast = last;
-        Node newNode = new Node(preTask);
-        if (oldLast == null) {
-            first = newNode;
-            last = newNode;
-        } else {
-            last.previous = oldLast;
-            oldLast.next = newNode;
-        }
         if (nodeMap.containsKey(preTask.getId())) {
             remove(preTask.getId());
         }
-        nodeMap.put(preTask.getId(), newNode);
+        Node node = linkLast(preTask);
+        nodeMap.put(preTask.getId(), node);
         return preTask;
     }
 
     @Override
     public void remove(int id) {
-        if (nodeMap.get(id) != null) {
-            Node delitedNode = nodeMap.remove(id);
-            removeNode(delitedNode);
-        }
+        removeNode(id);
     }
 
-    private void removeNode(Node node) {
-        Node oldPrev = node.previous;
-        if (oldPrev == null) {
-            oldPrev = first;
-        }
-        Node oldNext = node.next;
-        if (oldNext == null) {
-            oldNext = last;
-        }
-        if (node.next == null) {
-            oldPrev = last;
+    private Node linkLast(PreTask preTask) {
+        Node newNode = new Node(preTask);
+        if (first == null) {
+            first = newNode;
         } else {
-            oldPrev.next = node.next;
+            last.next = newNode;
         }
-        if (node.previous == null) {
-            oldNext = first;
-        } else {
-            oldPrev.next = node.next;
+        last = newNode;
+        return last;
+    }
+
+    private void removeNode(int id) {
+        Node node = nodeMap.get(id);
+        if (node != null) {
+            nodeMap.remove(id);
+            if (node.previous == null) {
+                first = node.next;
+            } else {
+                node.previous.next = node.next;
+            }
+            if (node.next == null) {
+                last = node.previous;
+            } else {
+                node.next.previous = node.previous;
+            }
+            node.previous = null;
+            node.next = null;
         }
     }
 }
