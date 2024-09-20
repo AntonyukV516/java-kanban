@@ -24,7 +24,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    // переделать согласно коментариям
     @Override
     public List<PreTask> getHistory() {
         List<PreTask> history = new ArrayList<>();
