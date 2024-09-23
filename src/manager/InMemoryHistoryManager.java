@@ -56,6 +56,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             first = newNode;
         } else {
             last.next = newNode;
+            newNode.previous = last;
         }
         last = newNode;
         return last;
@@ -77,6 +78,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
             node.previous = null;
             node.next = null;
+            node.value = null;
         }
     }
 }
