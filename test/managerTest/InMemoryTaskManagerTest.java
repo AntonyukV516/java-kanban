@@ -40,8 +40,8 @@ class InMemoryTaskManagerTest {
         Epic epic = new Epic("навести уборку", "Порядок");
         Subtask subtask1 = new Subtask("помыть посуду", "посуда");
         Subtask subtask2 = new Subtask("помыть посуду", "посуда");
-        subtask1.setEpicID(epic.getId());
-        subtask2.setEpicID(epic.getId());
+        subtask1.setEpicId(epic.getId());
+        subtask2.setEpicId(epic.getId());
         Subtask expectedSubtask = new Subtask("помыть посуду", "посуда");
         expectedSubtask.setId(1);
 
@@ -57,7 +57,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addTask(){
+    void addTask() {
         Task task = new Task("111", "name1");
         Task expectedTask = new Task("111", "name1");
 
@@ -69,7 +69,12 @@ class InMemoryTaskManagerTest {
     @Test
     void clearEpics() {
         Epic epic1 = new Epic("навести уборку", "Порядок");
+        Epic epic2 = new Epic("111", "111");
+        epic1.setId(1);
+        epic2.setId(2);
 
+        taskMeneger.getEpicById(epic1.getId());
+        taskMeneger.getEpicById(epic2.getId());
         taskMeneger.addEpic(epic1);
         taskMeneger.clearEpics();
 
@@ -77,9 +82,14 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void clearTasks(){
+    void clearTasks() {
         Task task = new Task("111", "name");
+        Task task1 = new Task("222", "name");
+        task.setId(1);
+        task1.setId(2);
 
+        taskMeneger.getTaskById(task.getId());
+        taskMeneger.getTaskById(task1.getId());
         taskMeneger.addTask(task);
         taskMeneger.clearTask();
 
@@ -87,7 +97,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void clearSubtasks(){
+    void clearSubtasks() {
         Subtask subtask = new Subtask("222", "name");
 
         taskMeneger.addSubtask(subtask);
@@ -97,38 +107,38 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getEpicByID(){
+    void getEpicById() {
         Epic epic = new Epic("123", " name123");
         Epic expectedEpic = new Epic("123", " name123");
 
         taskMeneger.addEpic(epic);
-        Epic actualEpic = taskMeneger.getEpicByID(epic.getId());
+        Epic actualEpic = taskMeneger.getEpicById(epic.getId());
 
         Assertions.assertEquals(expectedEpic, actualEpic);
     }
 
     @Test
-    void  getSubtaskByID(){
+    void  getSubtaskById() {
         Epic epic = new Epic("444", " name444");
         taskMeneger.addEpic(epic);
         Subtask subtask = new Subtask("999", "name999");
         Subtask expectedSubtask = new Subtask("999", "name999");
-        subtask.setEpicID(epic.getId());
+        subtask.setEpicId(epic.getId());
         expectedSubtask.setId(1);
 
         taskMeneger.addSubtask(subtask);
-        Subtask actualSubtask = taskMeneger.getSubtaskByID(subtask.getId());
+        Subtask actualSubtask = taskMeneger.getSubtaskById(subtask.getId());
 
         Assertions.assertEquals(expectedSubtask, actualSubtask);
     }
 
     @Test
-    void getTaskByID() {
+    void getTaskById() {
         Task task = new Task("попить чай", "Чай");
         Task expectedTask = new Task("попить чай", "Чай");
 
         taskMeneger.addTask(task);
-        Task actualTask = taskMeneger.getTaskByID(task.getId());
+        Task actualTask = taskMeneger.getTaskById(task.getId());
 
         Assertions.assertEquals(expectedTask, actualTask);
     }
@@ -148,15 +158,15 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void deleteSubtaskByID() {
+    void deleteSubtaskById() {
         Epic epic = new Epic("уборка кухни", "Уборка");
         Subtask subtask = new Subtask("помыть плиту", "Плита");
-        subtask.setEpicID(epic.getId());
+        subtask.setEpicId(epic.getId());
         taskMeneger.addSubtask(subtask);
 
-        taskMeneger.deleteSubtaskByID(subtask.getId());
+        taskMeneger.deleteSubtaskById(subtask.getId());
 
-        Assertions.assertTrue(epic.getSubtasksID().isEmpty());
+        Assertions.assertTrue(epic.getSubtasksId().isEmpty());
     }
 
     @Test
@@ -165,8 +175,8 @@ class InMemoryTaskManagerTest {
         taskMeneger.addEpic(epic);
         Subtask subtask1 = new Subtask("доехать", "Проезд");
         Subtask subtask2 = new Subtask("не уснуть", "Работа");
-        subtask1.setEpicID(epic.getId());
-        subtask2.setEpicID(epic.getId());
+        subtask1.setEpicId(epic.getId());
+        subtask2.setEpicId(epic.getId());
         taskMeneger.addSubtask(subtask1);
         taskMeneger.addSubtask(subtask2);
         ArrayList<Subtask> expectedList = new ArrayList<>();
@@ -180,22 +190,22 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void savedOldVersionTaskInHistory(){
+    void savedOldVersionTaskInHistory() {
         Task task = new Task("description", "Name");
         Task updatedTask = new Task("descriptionNew", "NameNew");
         Task expectedTask = new Task("description", "Name");
 
         taskMeneger.addTask(task);
-        taskMeneger.getTaskByID(task.getId());
+        taskMeneger.getTaskById(task.getId());
         updatedTask.setId(task.getId());
         taskMeneger.updateTask(updatedTask);
-        taskMeneger.getTaskByID(updatedTask.getId());
+        taskMeneger.getTaskById(updatedTask.getId());
 
         Assertions.assertTrue(taskMeneger.getHistory().contains(expectedTask));
     }
 
     @Test
-    void consistencyTask(){
+    void consistencyTask() {
         Task task = new Task("описание", "Имя");
 
         Task actualTask = taskMeneger.addTask(task);

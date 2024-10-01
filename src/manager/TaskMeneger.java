@@ -27,11 +27,11 @@ public interface TaskMeneger {
 
     void clearSubtask();
 
-    Epic getEpicByID(Integer ID);
+    Epic getEpicById(Integer id);
 
-    Task getTaskByID(Integer ID);
+    Task getTaskById(Integer id);
 
-    Subtask getSubtaskByID(Integer ID);
+    Subtask getSubtaskById(Integer id);
 
     Task updateTask(Task updatedTask);
 
@@ -39,13 +39,13 @@ public interface TaskMeneger {
 
     Subtask updateSubtask(Subtask updatedSubtask);
 
-    void deleteEpicByID(Integer ID);
+    void deleteEpicById(Integer id);
 
-    void deleteTaskByID(Integer ID);
+    void deleteTaskById(Integer id);
 
-    void deleteSubtaskByID(Integer ID);
+    void deleteSubtaskById(Integer id);
 
-    ArrayList<Subtask> getSubTaskFromEpic(Integer epicID);
+    ArrayList<Subtask> getSubTaskFromEpic(Integer epicId);
 
     List<PreTask> getHistory();
 }

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class ManagersTest {
 
     @Test
-    void getDefault(){
+    void getDefault() {
         TaskMeneger taskMeneger = new InMemoryTaskManager();
 
         TaskMeneger actualTaskManager = Managers.getDefault();
@@ -18,7 +18,7 @@ public class ManagersTest {
     }
 
     @Test
-    void getDefaultHistory(){
+    void getDefaultHistory() {
         HistoryManager historyManager = new InMemoryHistoryManager();
 
         HistoryManager actualHistoryManager = Managers.getDefaultHistory();

@@ -3,25 +3,25 @@ package model;
 import java.util.ArrayList;
 
 public class Epic extends PreTask {
-    private ArrayList<Integer> subtasksID = new ArrayList<>();
+    private ArrayList<Integer> subtasksId = new ArrayList<>();
 
     public Epic(String description, String name) {
         super(description, name);
     }
 
-    public ArrayList<Integer> getSubtasksID() {
-        return subtasksID;
+    public ArrayList<Integer> getSubtasksId() {
+        return subtasksId;
     }
 
-    public void clearSubtasksID(){
-        subtasksID.clear();
+    public void clearSubtasksId() {
+        subtasksId.clear();
     }
 
-    public void removeSubtaskID (Integer ID){
-        subtasksID.remove(ID);
+    public void removeSubtaskId(Integer id) {
+        subtasksId.remove(id);
     }
 
-    public void addSubtaskID(Integer newSubtasksID) {
-        subtasksID.add(newSubtasksID);
+    public void addSubtaskId(Integer newSubtasksId) {
+        subtasksId.add(newSubtasksId);
     }
 }
