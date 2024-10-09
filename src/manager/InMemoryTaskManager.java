@@ -37,14 +37,18 @@ public class InMemoryTaskManager implements TaskMeneger {
 
     @Override
     public Epic addEpic(Epic epic) {
-        epic.setId(genId());
+        if (epic.getId() == null) {
+            epic.setId(genId());
+        }
         epics.put(epic.getId(), epic);
         return epic;
     }
 
     @Override
     public Subtask addSubtask(Subtask subtask) {
-        subtask.setId(genId());
+        if (subtask.getId() == null) {
+            subtask.setId(genId());
+        }
         if (epics.get(subtask.getEpicId()) == null) {
             return null;
         } else {
@@ -57,7 +61,9 @@ public class InMemoryTaskManager implements TaskMeneger {
 
     @Override
     public Task addTask(Task task) {
-        task.setId(genId());
+        if (task.getId() == null) {
+            task.setId(genId());
+        }
         tasks.put(task.getId(), task);
         return task;
     }
