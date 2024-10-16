@@ -11,7 +11,11 @@ import java.io.*;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private File file = new File("data.csv");
+    private final File file;
+
+    public FileBackedTaskManager(File file) {
+        this.file = file;
+    }
 
     @Override
     public Epic addEpic(Epic epic) {
@@ -118,7 +122,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public static TaskMeneger loadFromFile(String path) {
-        TaskMeneger taskMeneger = new FileBackedTaskManager();
+        TaskMeneger taskMeneger = Managers.getDefaultFileBackedTaskManager();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             while (br.ready()) {
                 String line = br.readLine();
