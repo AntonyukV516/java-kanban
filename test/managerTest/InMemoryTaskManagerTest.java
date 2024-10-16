@@ -38,8 +38,13 @@ class InMemoryTaskManagerTest {
     @Test
     void addSubtask() {
         Epic epic = new Epic("навести уборку", "Порядок");
+        taskMeneger.addEpic(epic);
         Subtask subtask1 = new Subtask("помыть посуду", "посуда");
+        taskMeneger.addSubtask(subtask1);
+        subtask1.setId(1);
         Subtask subtask2 = new Subtask("помыть посуду", "посуда");
+        taskMeneger.addSubtask(subtask2);
+        subtask2.setId(2);
         subtask1.setEpicId(epic.getId());
         subtask2.setEpicId(epic.getId());
         Subtask expectedSubtask = new Subtask("помыть посуду", "посуда");
@@ -124,7 +129,6 @@ class InMemoryTaskManagerTest {
         Subtask subtask = new Subtask("999", "name999");
         Subtask expectedSubtask = new Subtask("999", "name999");
         subtask.setEpicId(epic.getId());
-        expectedSubtask.setId(1);
 
         taskMeneger.addSubtask(subtask);
         Subtask actualSubtask = taskMeneger.getSubtaskById(subtask.getId());
