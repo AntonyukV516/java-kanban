@@ -14,6 +14,13 @@ public abstract class PreTask {
         this.status = Status.NEW;
     }
 
+    public PreTask(int id, String name, Status status, String description) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+    }
+
     public Status getStatus() {
         return status;
     }

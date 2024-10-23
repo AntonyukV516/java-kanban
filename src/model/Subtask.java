@@ -7,6 +7,10 @@ public class Subtask extends PreTask {
         super(description, name);
     }
 
+    public Subtask(int id, String name, Status status, String description) {
+        super(id, name, status, description);
+    }
+
     public Integer getEpicId() {
         return epicId;
     }
