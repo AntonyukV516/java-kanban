@@ -1,5 +1,8 @@
 package model;
 
+import java.time.Duration;
+import java.time.Instant;
+
 public class Subtask extends PreTask {
     private Integer epicId;
 
@@ -7,8 +10,8 @@ public class Subtask extends PreTask {
         super(description, name);
     }
 
-    public Subtask(int id, String name, Status status, String description) {
-        super(id, name, status, description);
+    public Subtask(int id, String name, Status status, String description, Instant startTime, Duration duration) {
+        super(id, name, status, description, startTime, duration);
     }
 
     public Integer getEpicId() {

@@ -1,10 +1,10 @@
 package manager;
 
+import exception.IntersectionTaskException;
 import model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.Instant;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskMeneger {
     private Integer counterId = 0;
@@ -37,35 +37,44 @@ public class InMemoryTaskManager implements TaskMeneger {
 
     @Override
     public Epic addEpic(Epic epic) {
-        if (epic.getId() == null) {
-            epic.setId(genId());
+        if (!isIntersection(epic)) {
+            if (epic.getId() == null) {
+                epic.setId(genId());
+            }
+            epics.put(epic.getId(), epic);
+            return epic;
         }
-        epics.put(epic.getId(), epic);
-        return epic;
+        throw new IntersectionTaskException("Эпик пересекается по времени");
     }
 
     @Override
     public Subtask addSubtask(Subtask subtask) {
-        if (subtask.getId() == null) {
-            subtask.setId(genId());
+        if (!isIntersection(subtask)) {
+            if (subtask.getId() == null) {
+                subtask.setId(genId());
+            }
+            if (epics.get(subtask.getEpicId()) == null) {
+                return null;
+            } else {
+                subtasks.put(subtask.getId(), subtask);
+                epics.get(subtask.getEpicId()).addSubtaskId(subtask.getId());
+                changeEpicStatus(subtask.getEpicId());
+                return subtask;
+            }
         }
-        if (epics.get(subtask.getEpicId()) == null) {
-            return null;
-        } else {
-            subtasks.put(subtask.getId(), subtask);
-            epics.get(subtask.getEpicId()).addSubtaskId(subtask.getId());
-            changeEpicStatus(subtask.getEpicId());
-            return subtask;
-        }
+        throw new IntersectionTaskException("Подзадача пересекается по времени");
     }
 
     @Override
     public Task addTask(Task task) {
-        if (task.getId() == null) {
-            task.setId(genId());
+        if (!isIntersection(task)) {
+            if (task.getId() == null) {
+                task.setId(genId());
+            }
+            tasks.put(task.getId(), task);
+            return task;
         }
-        tasks.put(task.getId(), task);
-        return task;
+        throw new IntersectionTaskException("Задача пересекается по времени");
     }
 
     @Override
@@ -141,37 +150,46 @@ public class InMemoryTaskManager implements TaskMeneger {
 
     @Override
     public Task updateTask(Task updatedTask) {
-        Integer id = updatedTask.getId();
-        if (tasks.containsKey(id)) {
-            tasks.put(id, updatedTask);
-            return updatedTask;
+        if (!isIntersection(updatedTask)) {
+            Integer id = updatedTask.getId();
+            if (tasks.containsKey(id)) {
+                tasks.put(id, updatedTask);
+                return updatedTask;
+            }
+            return null;
         }
-        return null;
+        throw new IntersectionTaskException("Задача пересекается по времени");
     }
 
     @Override
     public Epic updateEpic(Epic updatedEpic) {
-        Integer id = updatedEpic.getId();
-        if (epics.containsKey(id)) {
-            String updatedName = updatedEpic.getName();
-            String updatedDiscription = updatedEpic.getDescription();
-            Epic oldEpic = epics.get(id);
-            oldEpic.setDescription(updatedDiscription);
-            oldEpic.setName(updatedName);
-            return oldEpic;
+        if (!isIntersection(updatedEpic)) {
+            Integer id = updatedEpic.getId();
+            if (epics.containsKey(id)) {
+                String updatedName = updatedEpic.getName();
+                String updatedDiscription = updatedEpic.getDescription();
+                Epic oldEpic = epics.get(id);
+                oldEpic.setDescription(updatedDiscription);
+                oldEpic.setName(updatedName);
+                return oldEpic;
+            }
+            return null;
         }
-        return null;
+        throw new IntersectionTaskException("Эпик пересекается по времени");
     }
 
     @Override
     public Subtask updateSubtask(Subtask updatedSubtask) {
-        int id = updatedSubtask.getId();
-        if (subtasks.containsKey(id)) {
-            subtasks.put(id, updatedSubtask);
-            changeEpicStatus(updatedSubtask.getEpicId());
-            return updatedSubtask;
+        if (!isIntersection(updatedSubtask)) {
+            int id = updatedSubtask.getId();
+            if (subtasks.containsKey(id)) {
+                subtasks.put(id, updatedSubtask);
+                changeEpicStatus(updatedSubtask.getEpicId());
+                return updatedSubtask;
+            }
+            return null;
         }
-        return null;
+        throw new IntersectionTaskException("Подзадача пересекается по времени");
     }
 
     @Override
@@ -221,5 +239,47 @@ public class InMemoryTaskManager implements TaskMeneger {
     @Override
     public List<PreTask> getHistory() {
         return historyManager.getHistory();
+    }
+
+    @Override
+    public List<PreTask> getPrioritizedTasks() {
+        List<PreTask> prioritizedTasks = new LinkedList<>(epics.values());
+        prioritizedTasks.addAll(tasks.values());
+        prioritizedTasks.addAll(subtasks.values());
+        return prioritizedTasks.stream()
+                .sorted(Comparator.comparing(PreTask::getStartTime))
+                .toList();
+    }
+
+    @Override
+    public boolean isIntersection(PreTask preTask1) {
+        List<PreTask > sortedList = new LinkedList<>(getPrioritizedTasks());
+        Optional<PreTask> preTask2 = sortedList.stream()
+                .filter(preTask -> preTask.equals(preTask1))
+                .findFirst();
+
+        if (preTask2.isPresent()) {
+            sortedList.remove(preTask2.get());
+
+            if (sortedList.stream().anyMatch(preTask -> checkIntersection(preTask1, preTask))) {
+                sortedList.add(preTask2.get());
+                return true;
+            }
+        }
+        return sortedList.stream().anyMatch(preTask -> checkIntersection(preTask1, preTask));
+    }
+
+    @Override
+    public boolean checkIntersection(PreTask preTask1, PreTask preTask2) {
+        Instant startTime1 = preTask1.getStartTime();
+        Instant endTime1 = preTask1.getEndTime();
+        Instant startTime2 = preTask2.getStartTime();
+        Instant endTime2 = preTask2.getEndTime();
+
+        if (startTime1 == null || endTime1 == null || startTime2 == null || endTime2 == null) {
+            return false;
+        }
+        return startTime1.isBefore(endTime2) && endTime1.isAfter(startTime2)
+                || startTime1.equals(startTime2) && endTime1.equals(endTime2);
     }
 }
