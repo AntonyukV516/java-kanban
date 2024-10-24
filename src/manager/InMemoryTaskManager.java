@@ -253,7 +253,7 @@ public class InMemoryTaskManager implements TaskMeneger {
 
     @Override
     public boolean isIntersection(PreTask preTask1) {
-        List<PreTask > sortedList = new LinkedList<>(getPrioritizedTasks());
+        List<PreTask> sortedList = new LinkedList<>(getPrioritizedTasks());
         Optional<PreTask> preTask2 = sortedList.stream()
                 .filter(preTask -> preTask.equals(preTask1))
                 .findFirst();
