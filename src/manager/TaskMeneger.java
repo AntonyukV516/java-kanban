@@ -48,4 +48,10 @@ public interface TaskMeneger {
     ArrayList<Subtask> getSubTaskFromEpic(Integer epicId);
 
     List<PreTask> getHistory();
+
+    List<PreTask> getPrioritizedTasks();
+
+    boolean isIntersection(PreTask preTask1);
+
+    boolean checkIntersection(PreTask preTask1, PreTask preTask2);
 }
