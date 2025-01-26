@@ -7,6 +7,7 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 public interface TaskMeneger {
     Epic addEpic(Epic epic);
@@ -49,7 +50,7 @@ public interface TaskMeneger {
 
     List<PreTask> getHistory();
 
-    List<PreTask> getPrioritizedTasks();
+    TreeSet<PreTask> getPrioritizedTasks();
 
     boolean isIntersection(PreTask preTask1);
 

@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 class InMemoryTaskManagerTest {
 
@@ -25,8 +26,10 @@ class InMemoryTaskManagerTest {
 
     @Test
     void addEpic() {
-        Epic epic = new Epic("навести уборку", "Порядок");
-        Epic expectedEpic = new Epic("навести уборку", "Порядок");
+        Epic epic = new Epic(20, "name2", Status.NEW, "description2",
+                Instant.now(), Duration.ofHours(24));
+        Epic expectedEpic = new Epic(20, "name2", Status.NEW, "description2",
+                Instant.now(), Duration.ofHours(24));
 
         Epic savedEpic = taskMeneger.addEpic(epic);
 
@@ -242,7 +245,7 @@ class InMemoryTaskManagerTest {
         taskMeneger.addEpic(epic);
         taskMeneger.addSubtask(subtask);
         taskMeneger.addTask(task);
-        List<PreTask> prioritizedTasks = taskMeneger.getPrioritizedTasks();
+        TreeSet<PreTask> prioritizedTasks = taskMeneger.getPrioritizedTasks();
 
         Assertions.assertEquals(task, prioritizedTasks.getFirst());
         Assertions.assertEquals(epic, prioritizedTasks.getLast());

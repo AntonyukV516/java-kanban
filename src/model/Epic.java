@@ -36,7 +36,6 @@ public class Epic extends PreTask {
         subtasksId.add(newSubtasksId);
     }
 
-
     public Instant getEndTime(TaskMeneger taskMeneger) {
         try {
             return taskMeneger.getSubTaskFromEpic(id)
@@ -49,11 +48,9 @@ public class Epic extends PreTask {
         }
     }
 
-
     public Duration getDuration(TaskMeneger taskMeneger) {
         return Duration.between(getStartTime(taskMeneger), getEndTime(taskMeneger));
     }
-
 
     public Instant getStartTime(TaskMeneger taskMeneger) {
         try {
@@ -67,4 +64,22 @@ public class Epic extends PreTask {
         }
 
     }
+
+  /*  @Override
+    public Instant getEndTime() {
+//Думаю проблема в том, что компаратор treeSet  не может корректно обработать время начала эпика
+но я не понимаю как это скоректировать
+    }
+
+    @Override
+    public Instant getStartTime() {
+
+    }
+
+    @Override
+    public Duration getDuration() {
+
+    }
+*/
+
 }

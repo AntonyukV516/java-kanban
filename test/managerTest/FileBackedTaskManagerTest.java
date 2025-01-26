@@ -25,7 +25,7 @@ class FileBackedTaskManagerTest {
         Task task = new Task(5, "name1", Status.IN_PROGRESS, "description1",
                 Instant.now(), Duration.ofHours(20));
         Epic epic = new Epic(20, "name2", Status.IN_PROGRESS, "description2",
-                Instant.ofEpochSecond(1), Duration.ofHours(47));
+                Instant.ofEpochSecond(1), Duration.ofHours(1));
 
         taskMeneger.addTask(task);
         taskMeneger.addEpic(epic);
@@ -67,7 +67,7 @@ class FileBackedTaskManagerTest {
         taskMeneger.addSubtask(subtask1);
         taskMeneger.addSubtask(subtask2);
 
-        Instant epicEndTime = epic.getEndTime(taskMeneger);
+        Instant epicEndTime = epic.getEndTime();
 
         Assertions.assertEquals(Instant.ofEpochSecond(9_000_090_000L), epicEndTime);
     }
