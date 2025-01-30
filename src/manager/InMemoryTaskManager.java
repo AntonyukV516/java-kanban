@@ -50,17 +50,20 @@ public class InMemoryTaskManager implements TaskMeneger {
 
     @Override
     public Subtask addSubtask(Subtask subtask) {
+        Epic epic = epics.get(subtask.getEpicId());
         if (!isIntersection(subtask)) {
             if (subtask.getId() == null) {
                 subtask.setId(genId());
             }
-            if (epics.get(subtask.getEpicId()) == null) {
+            if (epic == null) {
                 return null;
             } else {
                 subtasks.put(subtask.getId(), subtask);
-                epics.get(subtask.getEpicId()).addSubtaskId(subtask.getId());
+                epic.addSubtaskId(subtask.getId());
                 changeEpicStatus(subtask.getEpicId());
                 prioritizedTasks.add(subtask);
+                epic.setStartTime(epic.getStartTime(getSubTaskFromEpic(epic.getId())));
+                epic.setDuration(epic.getDuration(getSubTaskFromEpic(epic.getId())));
                 return subtask;
             }
         } else throw new IntersectionTaskException("Подзадача пересекается по времени");
@@ -163,7 +166,6 @@ public class InMemoryTaskManager implements TaskMeneger {
 
     @Override
     public Epic updateEpic(Epic updatedEpic) {
-        if (!isIntersection(updatedEpic)) {
             Integer id = updatedEpic.getId();
             if (epics.containsKey(id)) {
                 String updatedName = updatedEpic.getName();
@@ -174,7 +176,6 @@ public class InMemoryTaskManager implements TaskMeneger {
                 return oldEpic;
             }
             return null;
-        } else throw new IntersectionTaskException("Эпик пересекается по времени");
     }
 
     @Override
@@ -182,8 +183,11 @@ public class InMemoryTaskManager implements TaskMeneger {
         if (!isIntersection(updatedSubtask)) {
             int id = updatedSubtask.getId();
             if (subtasks.containsKey(id)) {
+                Epic epic = epics.get(updatedSubtask.getEpicId());
                 subtasks.put(id, updatedSubtask);
                 changeEpicStatus(updatedSubtask.getEpicId());
+                epic.setStartTime(epic.getStartTime(getSubTaskFromEpic(epic.getId())));
+                epic.setDuration(epic.getDuration(getSubTaskFromEpic(epic.getId())));
                 return updatedSubtask;
             }
             return null;
@@ -261,6 +265,8 @@ public class InMemoryTaskManager implements TaskMeneger {
         }
         return !(startTime1.isBefore(startTime2) && endTime1.isBefore(endTime2))
                 || endTime1.equals(startTime2)
+                // использую equals, а не isEqual,
+                // так как использую Instant для времени, в спецификации такой метод отсутствует
                 || startTime2.isBefore(endTime1) && startTime1.isBefore(endTime2)
                 || startTime1.equals(startTime2) && endTime1.equals(endTime2)
                 || startTime1.isBefore(endTime2) && startTime2.isBefore(endTime1)

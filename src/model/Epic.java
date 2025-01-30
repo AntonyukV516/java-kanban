@@ -36,9 +36,9 @@ public class Epic extends PreTask {
         subtasksId.add(newSubtasksId);
     }
 
-    public Instant getEndTime(TaskMeneger taskMeneger) {
+    public Instant getEndTime(ArrayList<Subtask> subTaskFromEpic) {
         try {
-            return taskMeneger.getSubTaskFromEpic(id)
+            return  subTaskFromEpic
                     .stream()
                     .map(subtask -> subtask.getStartTime().plus(duration))
                     .max(Comparator.comparing(Instant::getEpochSecond))
@@ -48,15 +48,15 @@ public class Epic extends PreTask {
         }
     }
 
-    public Duration getDuration(TaskMeneger taskMeneger) {
-        return Duration.between(getStartTime(taskMeneger), getEndTime(taskMeneger));
+    public Duration getDuration(ArrayList<Subtask> subTaskFromEpic) {
+        return Duration.between(getStartTime(subTaskFromEpic), getEndTime(subTaskFromEpic));
     }
 
-    public Instant getStartTime(TaskMeneger taskMeneger) {
+    public  Instant getStartTime(ArrayList<Subtask> subTaskFromEpic) {
         try {
-            return taskMeneger.getSubTaskFromEpic(this.id)
+            return subTaskFromEpic
                     .stream()
-                    .map(subtask -> subtask.getStartTime().plus(duration))
+                    .map(subtask -> subtask.getStartTime().plus(getDuration()))
                     .min(Comparator.comparing(Instant::getEpochSecond))
                     .orElseGet(() -> startTime);
         } catch (RuntimeException e) {
@@ -64,22 +64,4 @@ public class Epic extends PreTask {
         }
 
     }
-
-  /*  @Override
-    public Instant getEndTime() {
-//Думаю проблема в том, что компаратор treeSet  не может корректно обработать время начала эпика
-но я не понимаю как это скоректировать
-    }
-
-    @Override
-    public Instant getStartTime() {
-
-    }
-
-    @Override
-    public Duration getDuration() {
-
-    }
-*/
-
 }

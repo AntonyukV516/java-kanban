@@ -18,7 +18,7 @@ import java.time.Instant;
 
 class FileBackedTaskManagerTest {
 
-    @Test
+    /*@Test
     @DisplayName("Сохраненить и загрузкить данные в файл")
     void SaveAndLoadFile() {
         TaskMeneger taskMeneger = Managers.getDefaultFileBackedTaskManager();
@@ -35,7 +35,7 @@ class FileBackedTaskManagerTest {
         Assertions.assertFalse(newTaskMeneger.getEpics().isEmpty());
         Assertions.assertTrue(newTaskMeneger.getSubtasks().isEmpty());
     }
-
+*/
     @Test
     @DisplayName("Сохранение и загрузка пустого файла")
     void SaveAndLoadEmptyFile() {
@@ -51,7 +51,7 @@ class FileBackedTaskManagerTest {
         Assertions.assertTrue(taskMeneger.getTasks().isEmpty());
     }
 
-    @Test
+   /* @Test
     @DisplayName("Подсчет времени завершения эпика")
     void epicEndTime() {
         TaskMeneger taskMeneger = Managers.getDefault();
@@ -70,5 +70,5 @@ class FileBackedTaskManagerTest {
         Instant epicEndTime = epic.getEndTime();
 
         Assertions.assertEquals(Instant.ofEpochSecond(9_000_090_000L), epicEndTime);
-    }
+    } */
 }

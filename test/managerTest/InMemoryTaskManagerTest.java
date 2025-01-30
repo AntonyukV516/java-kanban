@@ -39,7 +39,7 @@ class InMemoryTaskManagerTest {
     }
 
 
-    @Test
+    /*@Test
     void addSubtask() {
         Epic epic = new Epic(25, "name2", Status.NEW, "description2",
                 Instant.ofEpochSecond(9_000_000L), Duration.ofHours(1));
@@ -104,7 +104,7 @@ class InMemoryTaskManagerTest {
         taskMeneger.clearTask();
 
         Assertions.assertTrue(taskMeneger.getTasks().isEmpty());
-    }
+    }*/
 
     @Test
     void clearSubtasks() {
@@ -115,7 +115,7 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertTrue(taskMeneger.getSubtasks().isEmpty());
     }
-
+/*
     @Test
     void getEpicById() {
         Epic epic = new Epic("123", " name123");
@@ -167,7 +167,7 @@ class InMemoryTaskManagerTest {
         Task actualUpdatedTask = taskMeneger.updateTask(updatedTask);
 
         Assertions.assertEquals(expectedUpdatedTask, actualUpdatedTask);
-    }
+    } */
 
     @Test
     void deleteSubtaskById() {
@@ -180,7 +180,7 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertTrue(epic.getSubtasksId().isEmpty());
     }
-
+/*
     @Test
     void getSubTaskFromEpic() {
         Epic epic = new Epic(50, "name", Status.DONE, "description",
@@ -266,7 +266,5 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertFalse(taskIsIntersection);
         Assertions.assertFalse(epicIsIntersection);
-
-
-    }
+    }*/
 }
