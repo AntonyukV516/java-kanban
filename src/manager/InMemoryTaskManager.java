@@ -1,10 +1,10 @@
 package manager;
 
+import exception.IntersectionTaskException;
 import model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.Instant;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskMeneger {
     private Integer counterId = 0;
@@ -12,6 +12,7 @@ public class InMemoryTaskManager implements TaskMeneger {
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
     private HistoryManager historyManager = Managers.getDefaultHistory();
+    private TreeSet<PreTask> prioritizedTasks = new TreeSet<>(Comparator.comparing(PreTask::getStartTime));
 
 
     private Integer genId() {
@@ -37,35 +38,47 @@ public class InMemoryTaskManager implements TaskMeneger {
 
     @Override
     public Epic addEpic(Epic epic) {
-        if (epic.getId() == null) {
-            epic.setId(genId());
-        }
-        epics.put(epic.getId(), epic);
-        return epic;
+        if (!isIntersection(epic)) {
+            if (epic.getId() == null) {
+                epic.setId(genId());
+            }
+            epics.put(epic.getId(), epic);
+            prioritizedTasks.add(epic);
+            return epic;
+        } else throw new IntersectionTaskException("Эпик пересекается по времени");
     }
 
     @Override
     public Subtask addSubtask(Subtask subtask) {
-        if (subtask.getId() == null) {
-            subtask.setId(genId());
-        }
-        if (epics.get(subtask.getEpicId()) == null) {
-            return null;
-        } else {
-            subtasks.put(subtask.getId(), subtask);
-            epics.get(subtask.getEpicId()).addSubtaskId(subtask.getId());
-            changeEpicStatus(subtask.getEpicId());
-            return subtask;
-        }
+        Epic epic = epics.get(subtask.getEpicId());
+        if (!isIntersection(subtask)) {
+            if (subtask.getId() == null) {
+                subtask.setId(genId());
+            }
+            if (epic == null) {
+                return null;
+            } else {
+                subtasks.put(subtask.getId(), subtask);
+                epic.addSubtaskId(subtask.getId());
+                changeEpicStatus(subtask.getEpicId());
+                prioritizedTasks.add(subtask);
+                epic.setStartTime(epic.getStartTime(getSubTaskFromEpic(epic.getId())));
+                epic.setDuration(epic.getDuration(getSubTaskFromEpic(epic.getId())));
+                return subtask;
+            }
+        } else throw new IntersectionTaskException("Подзадача пересекается по времени");
     }
 
     @Override
     public Task addTask(Task task) {
-        if (task.getId() == null) {
-            task.setId(genId());
-        }
-        tasks.put(task.getId(), task);
-        return task;
+        if (!isIntersection(task)) {
+            if (task.getId() == null) {
+                task.setId(genId());
+            }
+            tasks.put(task.getId(), task);
+            prioritizedTasks.add(task);
+            return task;
+        } else throw new IntersectionTaskException("Задача пересекается по времени");
     }
 
     @Override
@@ -141,37 +154,44 @@ public class InMemoryTaskManager implements TaskMeneger {
 
     @Override
     public Task updateTask(Task updatedTask) {
-        Integer id = updatedTask.getId();
-        if (tasks.containsKey(id)) {
-            tasks.put(id, updatedTask);
-            return updatedTask;
-        }
-        return null;
+        if (!isIntersection(updatedTask)) {
+            Integer id = updatedTask.getId();
+            if (tasks.containsKey(id)) {
+                tasks.put(id, updatedTask);
+                return updatedTask;
+            }
+            return null;
+        } else throw new IntersectionTaskException("Задача пересекается по времени");
     }
 
     @Override
     public Epic updateEpic(Epic updatedEpic) {
-        Integer id = updatedEpic.getId();
-        if (epics.containsKey(id)) {
-            String updatedName = updatedEpic.getName();
-            String updatedDiscription = updatedEpic.getDescription();
-            Epic oldEpic = epics.get(id);
-            oldEpic.setDescription(updatedDiscription);
-            oldEpic.setName(updatedName);
-            return oldEpic;
-        }
-        return null;
+            Integer id = updatedEpic.getId();
+            if (epics.containsKey(id)) {
+                String updatedName = updatedEpic.getName();
+                String updatedDiscription = updatedEpic.getDescription();
+                Epic oldEpic = epics.get(id);
+                oldEpic.setDescription(updatedDiscription);
+                oldEpic.setName(updatedName);
+                return oldEpic;
+            }
+            return null;
     }
 
     @Override
     public Subtask updateSubtask(Subtask updatedSubtask) {
-        int id = updatedSubtask.getId();
-        if (subtasks.containsKey(id)) {
-            subtasks.put(id, updatedSubtask);
-            changeEpicStatus(updatedSubtask.getEpicId());
-            return updatedSubtask;
-        }
-        return null;
+        if (!isIntersection(updatedSubtask)) {
+            int id = updatedSubtask.getId();
+            if (subtasks.containsKey(id)) {
+                Epic epic = epics.get(updatedSubtask.getEpicId());
+                subtasks.put(id, updatedSubtask);
+                changeEpicStatus(updatedSubtask.getEpicId());
+                epic.setStartTime(epic.getStartTime(getSubTaskFromEpic(epic.getId())));
+                epic.setDuration(epic.getDuration(getSubTaskFromEpic(epic.getId())));
+                return updatedSubtask;
+            }
+            return null;
+        } else throw new IntersectionTaskException("Подзадача пересекается по времени");
     }
 
     @Override
@@ -221,5 +241,38 @@ public class InMemoryTaskManager implements TaskMeneger {
     @Override
     public List<PreTask> getHistory() {
         return historyManager.getHistory();
+    }
+
+    @Override
+    public TreeSet<PreTask> getPrioritizedTasks() {
+        return prioritizedTasks;
+    }
+
+    @Override
+    public boolean isIntersection(PreTask preTask1) {
+        return getPrioritizedTasks().stream().anyMatch(preTask -> checkIntersection(preTask, preTask1));
+    }
+
+    @Override
+    public boolean checkIntersection(PreTask preTask1, PreTask preTask2) {
+        Instant startTime1 = preTask1.getStartTime();
+        Instant endTime1 = preTask1.getEndTime();
+        Instant startTime2 = preTask2.getStartTime();
+        Instant endTime2 = preTask2.getEndTime();
+
+        if (startTime1 == null || endTime1 == null || startTime2 == null || endTime2 == null) {
+            return false;
+        }
+        return !(startTime1.isBefore(startTime2) && endTime1.isBefore(endTime2))
+                || endTime1.equals(startTime2)
+                // использую equals, а не isEqual,
+                // так как использую Instant для времени, в спецификации такой метод отсутствует
+                || startTime2.isBefore(endTime1) && startTime1.isBefore(endTime2)
+                || startTime1.equals(startTime2) && endTime1.equals(endTime2)
+                || startTime1.isBefore(endTime2) && startTime2.isBefore(endTime1)
+                || endTime2.equals(startTime1)
+                || !(startTime2.isBefore(startTime1) && endTime2.isBefore(endTime2))
+                || startTime2.isAfter(startTime1) && endTime2.isBefore(endTime1)
+                || startTime1.isAfter(startTime2) && endTime1.isBefore(endTime2);
     }
 }

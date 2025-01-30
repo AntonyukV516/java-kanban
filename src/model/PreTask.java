@@ -1,5 +1,7 @@
 package model;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Objects;
 
 public abstract class PreTask {
@@ -7,6 +9,8 @@ public abstract class PreTask {
     protected String description;
     protected Status status;
     protected int id;
+    protected Duration duration;
+    protected Instant startTime;
 
     public PreTask(String description, String name) {
         this.description = description;
@@ -14,11 +18,13 @@ public abstract class PreTask {
         this.status = Status.NEW;
     }
 
-    public PreTask(int id, String name, Status status, String description) {
+    public PreTask(int id, String name, Status status, String description, Instant startTime, Duration duration) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public Status getStatus() {
@@ -51,6 +57,26 @@ public abstract class PreTask {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Instant startTime) {
+        this.startTime = startTime;
+    }
+
+    public Instant getEndTime() {
+        return getStartTime().plus(getDuration());
     }
 
     @Override
