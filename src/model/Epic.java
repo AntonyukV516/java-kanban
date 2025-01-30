@@ -1,6 +1,5 @@
 package model;
 
-import manager.TaskMeneger;
 
 import java.time.Duration;
 import java.time.Instant;
