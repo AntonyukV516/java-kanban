@@ -1,11 +1,10 @@
-package Server;
+package server;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import exception.IntersectionTaskException;
 import manager.TaskMeneger;
 import model.Subtask;
-import model.Task;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
