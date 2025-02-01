@@ -25,7 +25,7 @@ public class SubtaskHandler extends BaseHttpHandler {
                     .map(Subtask::toString)
                     .collect(Collectors.joining("\n"));
             writeResponse(exchange,response,200);
-        } else if (method.equals("GET") && path.split("/").length == 3){
+        } else if (method.equals("GET") && path.split("/").length == 3) {
             try {
                 String response = taskMeneger
                         .getSubtaskById(Integer.parseInt(path.split("/")[2])).toString();
