@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class HttpTaskServer {
-    static TaskMeneger taskMeneger = Managers.getDefault();
-    static HttpServer httpTaskServer;
+    private static final TaskMeneger taskMeneger = Managers.getDefault();
+    private static final HttpServer httpTaskServer;
 
     static {
         try {
@@ -17,9 +17,6 @@ public class HttpTaskServer {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public HttpTaskServer() throws IOException {
     }
 
     public static void main(String[] args) throws IOException {
@@ -30,17 +27,4 @@ public class HttpTaskServer {
         httpTaskServer.createContext("/prioritized", new PrioritizedHandler(taskMeneger));
         httpTaskServer.start();
     }
-
-    public TaskMeneger getTaskMeneger() {
-        return taskMeneger;
-    }
-
-    public void start() {
-        httpTaskServer.start();
-    }
-
-    public void stop() {
-        httpTaskServer.stop(1);
-    }
-
 }
