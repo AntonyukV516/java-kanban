@@ -265,8 +265,6 @@ public class InMemoryTaskManager implements TaskMeneger {
         }
         return !(startTime1.isBefore(startTime2) && endTime1.isBefore(endTime2))
                 || endTime1.equals(startTime2)
-                // использую equals, а не isEqual,
-                // так как использую Instant для времени, в спецификации такой метод отсутствует
                 || startTime2.isBefore(endTime1) && startTime1.isBefore(endTime2)
                 || startTime1.equals(startTime2) && endTime1.equals(endTime2)
                 || startTime1.isBefore(endTime2) && startTime2.isBefore(endTime1)
